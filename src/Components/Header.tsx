@@ -1,6 +1,6 @@
 import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useState } from "react";
 
 const Nav = styled.nav`
@@ -114,6 +114,26 @@ function Header() {
     const homeMatch = useMatch("/");
     const tvMatch = useMatch("tv");
     const [searchOpen, setSearchOpen] = useState(false);
+    const inputAnimation = useAnimation();
+
+    /**@function toggleSearch
+     * 1. searchOpen의 값이 true이면 input창이 이미 열린 상태니까 scaleX:0으로 숨겨주고
+     * 2. searchOpen의 값이 false이면 input창이 닫힌 상태니까 scaleX:1으로 열어줌
+     * 3. setSearchOpen을 사용해서 searchOpen(bool타입)값을 반대 값으로 수정
+     */
+    const toggleSearch = () => {
+        if (searchOpen) {
+            inputAnimation.start({
+                scaleX: 0,
+            });
+        } else {
+            inputAnimation.start({
+                scaleX: 1,
+            });
+        }
+
+        setSearchOpen((prev) => !prev);
+    };
 
     return (
         <Nav>
@@ -148,7 +168,7 @@ function Header() {
             <Col>
                 <Search>
                     <motion.svg
-                        onClick={() => setSearchOpen((prev) => !prev)}
+                        onClick={toggleSearch}
                         animate={{ x: searchOpen ? -177 : 0 }}
                         transition={{ type: "linear" }}
                         fill="currentColor"
@@ -162,7 +182,8 @@ function Header() {
                         ></path>
                     </motion.svg>
                     <Input
-                        animate={{ scaleX: searchOpen ? 1 : 0 }}
+                        animate={inputAnimation}
+                        initial={{ scaleX: 0 }}
                         transition={{ type: "linear" }}
                         placeholder="Search for movie or tv show..."
                     ></Input>
