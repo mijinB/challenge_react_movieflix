@@ -1,9 +1,9 @@
 import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
     position: fixed;
     top: 0;
     display: flex;
@@ -12,7 +12,6 @@ const Nav = styled.nav`
     width: 100%;
     height: 80px;
     padding: 20px 60px;
-    background-color: black;
     color: white;
     font-size: 14px;
 `;
@@ -110,11 +109,18 @@ const logoPathVariants = {
     },
 };
 
+const navVariants = {
+    top: { backgroundColor: "rgba(0, 0, 0, 0)" },
+    scroll: { backgroundColor: "rgba(0, 0, 0, 1)" },
+};
+
 function Header() {
     const homeMatch = useMatch("/");
     const tvMatch = useMatch("tv");
     const [searchOpen, setSearchOpen] = useState(false);
     const inputAnimation = useAnimation();
+    const navAnimation = useAnimation();
+    const { scrollY } = useScroll();
 
     /**@function toggleSearch
      * 1. searchOpen의 값이 true이면 input창이 이미 열린 상태니까 scaleX:0으로 숨겨주고
@@ -135,8 +141,22 @@ function Header() {
         setSearchOpen((prev) => !prev);
     };
 
+    /**@event useMotionValueEvent
+     * 1. framer-motion에서 지원
+     * 2. scrollY 값이 변경되면 변경된 값으로 함수 처리
+     * 3. 변경된 y 값이 80이 넘으면 navVariants의 "scroll"을 navAnimation에 적용
+     * 4. 넘지않으면 navVariants의 "top"을 navAnimation에 적용
+     */
+    useMotionValueEvent(scrollY, "change", (y) => {
+        if (y > 80) {
+            navAnimation.start("scroll");
+        } else {
+            navAnimation.start("top");
+        }
+    });
+
     return (
-        <Nav>
+        <Nav variants={navVariants} initial="top" animate={navAnimation}>
             <Col>
                 <Logo
                     variants={logoSvgVariants}
