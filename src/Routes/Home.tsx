@@ -70,14 +70,17 @@ const rowVariants = {
 
 function Home() {
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
-    const [sliderIndex, setSliderIndex] = useState(0);
+    const [sliderPage, setSliderPage] = useState(1);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
 
     /**@function increaseIndex
-     * 1. Row의 Animation이 실행 중이면 아무것도 return하지않음
-     * 2. 실행 중이 아니면 leaving(bool타입) 변수의 값을 true로 변경하고
-     * 3. sliderIndex 변수의 값을 +1
+     * 1. data(API)가 있으면 아래 기능들 수행
+     * 2. Row의 Animation이 실행 중이면 아무것도 return하지않음
+     * 3. toggleLeaving 함수 실행(sliderLeaving_bool타입 변수의 값을 toggle)
+     * 4. data를 한 페이지당 6개 보여줬을 때 몇 페이지가 나오는지 계산 후(배너에 보여준 data 한 개는 제외)
+     * 5. 마지막 페이지에 도달했을 경우 다시 sliderPage 변수 값 1로 변경해서 1페이지 보여주기
+     * 6. 마지막 페이지가 아닐 경우 sliderPage 변수 값 +1
      */
     const increaseIndex = () => {
         if (data) {
@@ -85,8 +88,8 @@ function Home() {
             toggleLeaving();
 
             const totalMovies = data.results.length - 1;
-            const maxIndex = Math.ceil(totalMovies / sliderOffset) - 1;
-            setSliderIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+            const maxIndex = Math.floor(totalMovies / sliderOffset);
+            setSliderPage((prev) => (prev === maxIndex ? 1 : prev + 1));
         }
     };
 
@@ -110,7 +113,7 @@ function Home() {
                     <Slider>
                         <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
                             <Row
-                                key={sliderIndex}
+                                key={sliderPage}
                                 variants={rowVariants}
                                 initial="hidden"
                                 animate="visible"
@@ -119,7 +122,7 @@ function Home() {
                             >
                                 {data?.results
                                     .slice(1)
-                                    .slice(sliderOffset * sliderIndex, sliderOffset * sliderIndex + sliderOffset)
+                                    .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
                                     .map((movie) => (
                                         <Box key={movie.id}>{movie.title}</Box>
                                     ))}
