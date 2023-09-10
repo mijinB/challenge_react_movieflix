@@ -71,9 +71,24 @@ const rowVariants = {
 function Home() {
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
     const [sliderIndex, setSliderIndex] = useState(0);
+    const [leaving, setLeaving] = useState(false);
 
+    /**@function increaseIndex
+     * 1. Row의 Animation이 실행 중이면 아무것도 return하지않음
+     * 2. 실행 중이 아니면 leaving(bool타입) 변수의 값을 true로 변경하고
+     * 3. sliderIndex 변수의 값을 +1
+     */
     const increaseIndex = () => {
+        if (leaving) return;
+        setLeaving(true);
         setSliderIndex((prev) => prev + 1);
+    };
+
+    /**@function toggleLeaving
+     * 1. leaving(bool타입) 변수의 값을 반대 값으로 변경(true↔false)
+     */
+    const toggleLeaving = () => {
+        setLeaving((prev) => !prev);
     };
 
     return (
@@ -87,7 +102,7 @@ function Home() {
                         <Overview>{data?.results[0].overview}</Overview>
                     </Banner>
                     <Slider>
-                        <AnimatePresence>
+                        <AnimatePresence onExitComplete={toggleLeaving}>
                             <Row
                                 key={sliderIndex}
                                 variants={rowVariants}
