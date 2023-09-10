@@ -45,33 +45,34 @@ const Row = styled(motion.div)`
     position: absolute;
     display: grid;
     grid-template-columns: repeat(6, 2fr);
-    gap: 10px;
+    gap: 5px;
     width: 100%;
 `;
 
 const Box = styled(motion.div)`
     height: 200px;
     background-color: white;
-    color: red;
-    font-size: 66px;
+    color: black;
+    font-size: 30px;
 `;
 
 const rowVariants = {
     hidden: {
-        x: window.outerWidth + 10,
+        x: window.outerWidth + 5,
     },
     visible: {
         x: 0,
     },
     exit: {
-        x: -window.outerWidth - 10,
+        x: -window.outerWidth - 5,
     },
 };
 
 function Home() {
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
     const [sliderIndex, setSliderIndex] = useState(0);
-    const [leaving, setLeaving] = useState(false);
+    const [sliderLeaving, setSliderLeaving] = useState(false);
+    const sliderOffset = 6;
 
     /**@function increaseIndex
      * 1. Row의 Animation이 실행 중이면 아무것도 return하지않음
@@ -79,16 +80,21 @@ function Home() {
      * 3. sliderIndex 변수의 값을 +1
      */
     const increaseIndex = () => {
-        if (leaving) return;
-        setLeaving(true);
-        setSliderIndex((prev) => prev + 1);
+        if (data) {
+            if (sliderLeaving) return;
+            toggleLeaving();
+
+            const totalMovies = data.results.length - 1;
+            const maxIndex = Math.ceil(totalMovies / sliderOffset) - 1;
+            setSliderIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+        }
     };
 
     /**@function toggleLeaving
      * 1. leaving(bool타입) 변수의 값을 반대 값으로 변경(true↔false)
      */
     const toggleLeaving = () => {
-        setLeaving((prev) => !prev);
+        setSliderLeaving((prev) => !prev);
     };
 
     return (
@@ -111,9 +117,12 @@ function Home() {
                                 exit="exit"
                                 transition={{ type: "tween", duration: 1 }}
                             >
-                                {[1, 2, 3, 4, 5, 6].map((item) => (
-                                    <Box key={item}>{item}</Box>
-                                ))}
+                                {data?.results
+                                    .slice(1)
+                                    .slice(sliderOffset * sliderIndex, sliderOffset * sliderIndex + sliderOffset)
+                                    .map((movie) => (
+                                        <Box key={movie.id}>{movie.title}</Box>
+                                    ))}
                             </Row>
                         </AnimatePresence>
                     </Slider>
