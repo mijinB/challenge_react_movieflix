@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useMatch, useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     padding-bottom: 200px;
@@ -54,6 +55,7 @@ const Row = styled(motion.div)`
 
 const Box = styled(motion.div)`
     height: 200px;
+    cursor: pointer;
     &:first-child {
         transform-origin: center left;
     }
@@ -81,6 +83,17 @@ const BoxInfo = styled(motion.div)`
     h3 {
         font-size: 11px;
     }
+`;
+
+const DetailInfoBox = styled(motion.div)`
+    position: absolute;
+    bottom: -210px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 550px;
+    height: 400px;
+    background-color: black;
 `;
 
 const rowVariants = {
@@ -127,6 +140,10 @@ function Home() {
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
 
+    const navigate = useNavigate();
+    const detailInfoBox = useMatch("/movies/:movieId");
+    console.log(detailInfoBox);
+
     /**@function increaseIndex
      * 1. data(API)가 있으면 아래 기능들 수행
      * 2. Row의 Animation이 실행 중이면 아무것도 return하지않음
@@ -151,6 +168,10 @@ function Home() {
      */
     const toggleLeaving = () => {
         setSliderLeaving((prev) => !prev);
+    };
+
+    const onBoxClicked = (movieId: number) => {
+        navigate(`/movies/${movieId}`);
     };
 
     return (
@@ -178,11 +199,13 @@ function Home() {
                                     .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
                                     .map((movie) => (
                                         <Box
+                                            layoutId={movie.id + ""}
                                             key={movie.id}
                                             variants={boxVariants}
                                             initial="nomal"
                                             whileHover="hover"
                                             transition={{ type: "tween" }}
+                                            onClick={() => onBoxClicked(movie.id)}
                                         >
                                             <BoxImg $photo={makeImagePath(movie.backdrop_path, "w500")} />
                                             <BoxInfo variants={boxInfoVariants}>
@@ -194,6 +217,9 @@ function Home() {
                             </Row>
                         </AnimatePresence>
                     </Slider>
+                    <AnimatePresence>
+                        {detailInfoBox ? <DetailInfoBox layoutId={detailInfoBox.params.movieId} /> : null}
+                    </AnimatePresence>
                 </>
             )}
         </Wrapper>
