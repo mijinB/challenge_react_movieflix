@@ -102,7 +102,7 @@ function Home() {
                         <Overview>{data?.results[0].overview}</Overview>
                     </Banner>
                     <Slider>
-                        <AnimatePresence onExitComplete={toggleLeaving}>
+                        <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
                             <Row
                                 key={sliderIndex}
                                 variants={rowVariants}
