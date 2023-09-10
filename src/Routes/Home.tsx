@@ -49,11 +49,9 @@ const Row = styled(motion.div)`
     width: 100%;
 `;
 
-const Box = styled(motion.div)`
+const Box = styled(motion.div)<{ $photo: string }>`
     height: 200px;
-    background-color: white;
-    color: black;
-    font-size: 30px;
+    background: url(${(props) => props.$photo}) center/cover;
 `;
 
 const rowVariants = {
@@ -70,7 +68,7 @@ const rowVariants = {
 
 function Home() {
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
-    const [sliderPage, setSliderPage] = useState(1);
+    const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
 
@@ -79,7 +77,7 @@ function Home() {
      * 2. Row의 Animation이 실행 중이면 아무것도 return하지않음
      * 3. toggleLeaving 함수 실행(sliderLeaving_bool타입 변수의 값을 toggle)
      * 4. data를 한 페이지당 6개 보여줬을 때 몇 페이지가 나오는지 계산 후(배너에 보여준 data 한 개는 제외)
-     * 5. 마지막 페이지에 도달했을 경우 다시 sliderPage 변수 값 1로 변경해서 1페이지 보여주기
+     * 5. 마지막 페이지에 도달했을 경우 다시 sliderPage 변수 값 0으로 변경해서 첫 페이지 보여주기
      * 6. 마지막 페이지가 아닐 경우 sliderPage 변수 값 +1
      */
     const increaseIndex = () => {
@@ -88,8 +86,8 @@ function Home() {
             toggleLeaving();
 
             const totalMovies = data.results.length - 1;
-            const maxIndex = Math.floor(totalMovies / sliderOffset);
-            setSliderPage((prev) => (prev === maxIndex ? 1 : prev + 1));
+            const maxIndex = Math.ceil(totalMovies / sliderOffset) - 1;
+            setSliderPage((prev) => (prev === maxIndex ? 0 : prev + 1));
         }
     };
 
@@ -124,7 +122,7 @@ function Home() {
                                     .slice(1)
                                     .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
                                     .map((movie) => (
-                                        <Box key={movie.id}>{movie.title}</Box>
+                                        <Box key={movie.id} $photo={makeImagePath(movie.backdrop_path, "w500")} />
                                     ))}
                             </Row>
                         </AnimatePresence>
