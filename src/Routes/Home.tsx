@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 const Wrapper = styled.div`
+    padding-bottom: 200px;
     background-color: black;
 `;
 
@@ -52,6 +53,12 @@ const Row = styled(motion.div)`
 const Box = styled(motion.div)<{ $photo: string }>`
     height: 200px;
     background: url(${(props) => props.$photo}) center/cover;
+    &:first-child {
+        transform-origin: center left;
+    }
+    &:last-child {
+        transform-origin: center right;
+    }
 `;
 
 const rowVariants = {
@@ -63,6 +70,20 @@ const rowVariants = {
     },
     exit: {
         x: -window.outerWidth - 5,
+    },
+};
+
+const boxVariants = {
+    normal: {
+        scale: 1,
+    },
+    hover: {
+        scale: 1.3,
+        transition: {
+            delay: 0.5,
+            duration: 0.3,
+            type: "tween",
+        },
     },
 };
 
@@ -122,7 +143,14 @@ function Home() {
                                     .slice(1)
                                     .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
                                     .map((movie) => (
-                                        <Box key={movie.id} $photo={makeImagePath(movie.backdrop_path, "w500")} />
+                                        <Box
+                                            key={movie.id}
+                                            variants={boxVariants}
+                                            initial="nomal"
+                                            whileHover="hover"
+                                            transition={{ type: "tween" }}
+                                            $photo={makeImagePath(movie.backdrop_path, "w500")}
+                                        />
                                     ))}
                             </Row>
                         </AnimatePresence>
