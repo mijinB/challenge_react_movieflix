@@ -57,10 +57,10 @@ table {
   box-sizing: border-box;
 }
 body {
-  background-color: black;
+  background-color: ${(props) => props.theme.black.darker};
   font-weight: 300;
   font-family: 'Source Sans Pro', sans-serif;
-  color:${(props) => props.theme.white.darker};
+  color: white;
   line-height: 1.2;
 }
 a {

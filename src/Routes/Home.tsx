@@ -7,7 +7,6 @@ import { useState } from "react";
 
 const Wrapper = styled.div`
     padding-bottom: 200px;
-    background-color: black;
 `;
 
 const Loader = styled.div`
@@ -72,7 +71,7 @@ const BoxImg = styled(motion.div)<{ $photo: string }>`
 const BoxInfo = styled(motion.div)`
     width: 100%;
     padding: 10px;
-    background-color: ${(props) => props.theme.black.lighter};
+    background-color: ${(props) => props.theme.black.darker};
     opacity: 0;
     text-align: center;
     font-weight: 600;
