@@ -37,12 +37,25 @@ const BoxImg = styled(motion.div)<{ $photo: string }>`
 `;
 
 const BoxInfo = styled(motion.div)`
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
     width: 100%;
+    height: 100%;
     padding: 10px;
-    background-color: ${(props) => props.theme.black.darker};
+    background-image: linear-gradient(rgba(20, 20, 20, 0), rgba(20, 20, 20, 1));
     opacity: 0;
+    color: ${(props) => props.theme.white.darker};
     text-align: center;
     font-weight: 600;
+    span {
+        margin-bottom: 5px;
+        font-size: 11px;
+        font-weight: 400;
+    }
     h2 {
         font-size: 14px;
     }
@@ -119,8 +132,7 @@ const boxVariants = {
         scale: 1,
     },
     hover: {
-        scale: 1.3,
-        y: -30,
+        scale: 1.5,
         transition: {
             type: "tween",
             delay: 0.5,
@@ -224,6 +236,7 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
                                 >
                                     <BoxImg $photo={makeImagePath(movie.backdrop_path, "w500")} />
                                     <BoxInfo variants={boxInfoVariants}>
+                                        <span>{`⭐${movie.vote_average}/10`}</span>
                                         <h2>{movie.title}</h2>
                                         <h3>{movie.original_title}</h3>
                                     </BoxInfo>

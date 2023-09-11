@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
     position: fixed;
+    z-index: 99;
     top: 0;
     display: flex;
     justify-content: space-between;

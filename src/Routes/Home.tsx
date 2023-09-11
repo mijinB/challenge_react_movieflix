@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
-import { IGetMoviesResult, getNowPlayingMovies, getTopRatedMovies, getUpcomingMovies } from "../api";
+import { IGetMoviesResult, getNowPlayingMovies, getPopularMovies, getTopRatedMovies, getUpcomingMovies } from "../api";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import MovieSlider from "../Components/MovieSlider";
 
 const Wrapper = styled.div`
-    padding-bottom: 200px;
+    padding-bottom: 1300px;
 `;
 
 const Loader = styled.div`
@@ -21,7 +21,7 @@ const Banner = styled.div<{ $photo: string }>`
     justify-content: center;
     height: 100vh;
     padding: 60px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)), url(${(props) => props.$photo});
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(24, 24, 24, 1)), url(${(props) => props.$photo});
     background-size: cover;
     word-break: keep-all;
     h2 {
@@ -34,6 +34,17 @@ const Banner = styled.div<{ $photo: string }>`
         font-size: 18px;
         line-height: 28px;
     }
+`;
+
+const SliderWrapper = styled.div`
+    padding: 0 20px;
+`;
+
+const Category = styled.h3<{ $top: number }>`
+    position: relative;
+    top: ${(props) => props.$top}px;
+    font-size: 20px;
+    font-weight: 600;
 `;
 
 function Home() {
@@ -49,10 +60,14 @@ function Home() {
         ["upcomingMovies", "upcoming"],
         getUpcomingMovies
     );
+    const { data: popularData, isLoading: popularIsLoading } = useQuery<IGetMoviesResult>(
+        ["popularMovies", "popular"],
+        getPopularMovies
+    );
 
     return (
         <Wrapper>
-            {nowIsLoading && topIsLoading && upcomingIsLoading ? (
+            {nowIsLoading && topIsLoading && upcomingIsLoading && popularIsLoading ? (
                 <Loader>Loading...</Loader>
             ) : (
                 <>
@@ -60,8 +75,16 @@ function Home() {
                         <h2>{`${nowData?.results[0].original_title} (${nowData?.results[0].title})`}</h2>
                         <p>{nowData?.results[0].overview}</p>
                     </Banner>
-                    <MovieSlider keyPlus="now" data={nowData!} top={0} />
-                    <MovieSlider keyPlus="top" data={topData!} top={300} />
+                    <SliderWrapper>
+                        <Category $top={-50}>지금 상영중인 영화</Category>
+                        <MovieSlider keyPlus="now" data={nowData!} top={-25} />
+                        <Category $top={280}>TOP 평점 영화</Category>
+                        <MovieSlider keyPlus="top" data={topData!} top={305} />
+                        <Category $top={610}>지금 인기 많은 영화</Category>
+                        <MovieSlider keyPlus="popular" data={popularData!} top={635} />
+                        <Category $top={940}>개봉 예정 영화</Category>
+                        <MovieSlider keyPlus="upcoming" data={upcomingData!} top={965} />
+                    </SliderWrapper>
                 </>
             )}
         </Wrapper>

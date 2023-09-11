@@ -41,3 +41,9 @@ export function getUpcomingMovies() {
         response.json()
     );
 }
+
+export function getPopularMovies() {
+    return fetch(`${BASE_PATH}/movie/popular?api_key=${API_KEY}&language=ko-KR&region=kr`).then((response) =>
+        response.json()
+    );
+}
