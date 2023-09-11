@@ -111,7 +111,7 @@ const Overlay = styled(motion.div)`
     opacity: 0;
 `;
 
-const DetailTvBox = styled(motion.div)`
+const DetailTvBox = styled(motion.div)<{ $photo: string }>`
     position: fixed;
     z-index: 2;
     top: 100px;
@@ -122,7 +122,7 @@ const DetailTvBox = styled(motion.div)`
     height: 75vh;
     margin: 0 auto;
     border-radius: 15px;
-    background-color: ${(props) => props.theme.black.darker};
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${(props) => props.$photo}) center/cover;
     overflow: hidden;
 `;
 
@@ -143,12 +143,24 @@ const DetailTvInfoWrapper = styled.div`
         font-weight: 600;
     }
     h3 {
-        margin-bottom: 35px;
-        font-size: 15px;
+        margin-bottom: 20px;
+        font-size: 17px;
         font-weight: 600;
     }
     p {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+`;
+
+const SmallInfoWrapper = styled.div`
+    p:first-child {
+        font-size: 12px;
+    }
+    p:last-child {
+        margin-bottom: 30px;
         font-size: 14px;
+        font-weight: 600;
     }
 `;
 
@@ -304,6 +316,7 @@ function TvSlider({ section, keyPlus, data, top, buttonTop }: ITvSliderProps) {
                                     ? `${keyPlus}_${detailTvMatch?.params.tvId}`
                                     : `${keyPlus}_${searchTvMatch?.params.tvId}`
                             }
+                            $photo={makeImagePath(clickedTv.backdrop_path)}
                         >
                             {clickedTv && (
                                 <>
@@ -311,6 +324,10 @@ function TvSlider({ section, keyPlus, data, top, buttonTop }: ITvSliderProps) {
                                     <DetailTvInfoWrapper>
                                         <h2>{clickedTv.name}</h2>
                                         <h3>{clickedTv.original_name}</h3>
+                                        <SmallInfoWrapper>
+                                            <p>{`첫 방영일 : ${clickedTv.first_air_date}`}</p>
+                                            <p>{`⭐${clickedTv.vote_average}/10 (total ${clickedTv.vote_count})`}</p>
+                                        </SmallInfoWrapper>
                                         <p>{clickedTv.overview}</p>
                                     </DetailTvInfoWrapper>
                                 </>

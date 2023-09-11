@@ -79,7 +79,6 @@ const BoxNextButton = styled.button<{ $buttonTop: number }>`
     cursor: pointer;
     &:hover {
         color: ${(props) => props.theme.red};
-        background-color: ${(props) => props.theme.white.lighter};
     }
 `;
 
@@ -186,7 +185,7 @@ const boxVariants = {
         transition: {
             type: "tween",
             delay: 0.5,
-            duration: 0.3,
+            duration: 0.5,
         },
     },
 };
