@@ -121,8 +121,8 @@ interface IForm {
 }
 
 function Header() {
-    const homeMatch = useMatch("/");
-    const tvMatch = useMatch("tv");
+    const homeMatch = useMatch("movies/*");
+    const tvMatch = useMatch("tv/*");
     const [searchOpen, setSearchOpen] = useState(false);
     const inputAnimation = useAnimation();
     const navAnimation = useAnimation();
