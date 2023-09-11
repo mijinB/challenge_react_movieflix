@@ -68,5 +68,5 @@ export function getPopularMovies() {
 }
 
 export function getairingTodayTv() {
-    return fetch(`${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&language=ko-KR`).then((response) => response.json());
+    return fetch(`${BASE_PATH}/tv/airing_today?api_key=${API_KEY}`).then((response) => response.json());
 }
