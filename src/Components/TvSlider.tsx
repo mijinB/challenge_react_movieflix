@@ -64,6 +64,24 @@ const BoxInfo = styled(motion.div)`
     }
 `;
 
+const NoImg = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: ${(props) => props.theme.black.veryDark};
+    color: ${(props) => props.theme.white.darker};
+    text-align: center;
+    font-weight: 600;
+    h2 {
+        font-size: 20px;
+    }
+    h3 {
+        font-size: 14px;
+    }
+`;
+
 const Overlay = styled(motion.div)`
     position: fixed;
     z-index: 1;
@@ -154,12 +172,13 @@ const boxInfoVariants = {
 };
 
 interface ITvSliderProps {
+    section: string;
     keyPlus: string;
     data: IGetTvResult;
     top: number;
 }
 
-function TvSlider({ keyPlus, data, top }: ITvSliderProps) {
+function TvSlider({ section, keyPlus, data, top }: ITvSliderProps) {
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
@@ -167,6 +186,7 @@ function TvSlider({ keyPlus, data, top }: ITvSliderProps) {
     const [clickedTv, setClickedTv] = useState<ITv>();
     const navigate = useNavigate();
     const detailTvMatch = useMatch("/tv/:tvId");
+    const searchTvMatch = useMatch("/search/:tvId");
 
     /**@function increaseIndex
      * 1. data(API)가 있으면 아래 기능들 수행
@@ -195,18 +215,18 @@ function TvSlider({ keyPlus, data, top }: ITvSliderProps) {
     };
 
     /**@function onBoxClicked
-     * 1. `/tv/${tvId}`경로로 이동
+     * 1. `/${section}/${tvId}`경로로 이동
      */
     const onBoxClicked = (tv: ITv) => {
-        navigate(`/tv/${tv.id}`);
+        navigate(`/${section}/${tv.id}`);
         setClickedTv(tv);
     };
 
     /**@function onOverlayClick
-     * 1. "/tv"경로로 이동
+     * 1. "/${section}"경로로 이동
      */
     const onOverlayClick = () => {
-        navigate("/tv");
+        navigate(`/${section}`);
         setClickedTv(undefined);
     };
 
@@ -234,7 +254,14 @@ function TvSlider({ keyPlus, data, top }: ITvSliderProps) {
                                     transition={{ type: "tween" }}
                                     onClick={() => onBoxClicked(tv)}
                                 >
-                                    <BoxImg $photo={makeImagePath(tv.backdrop_path, "w500")} />
+                                    {tv.backdrop_path || tv.poster_path ? (
+                                        <BoxImg $photo={makeImagePath(tv.backdrop_path ?? tv.poster_path, "w500")} />
+                                    ) : (
+                                        <NoImg>
+                                            <h2>{tv.name}</h2>
+                                            <h3>{tv.original_name}</h3>
+                                        </NoImg>
+                                    )}
                                     <BoxInfo variants={boxInfoVariants}>
                                         <span>{`⭐${tv.vote_average}/10`}</span>
                                         <h2>{tv.name}</h2>
@@ -263,10 +290,16 @@ function TvSlider({ keyPlus, data, top }: ITvSliderProps) {
                 NEXT!!
             </button>
             <AnimatePresence>
-                {detailTvMatch && clickedTv ? (
+                {(detailTvMatch || searchTvMatch) && clickedTv ? (
                     <>
                         <Overlay animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onOverlayClick} />
-                        <DetailTvBox layoutId={`${keyPlus}_${detailTvMatch.params.tvId}`}>
+                        <DetailTvBox
+                            layoutId={
+                                detailTvMatch
+                                    ? `${keyPlus}_${detailTvMatch?.params.tvId}`
+                                    : `${keyPlus}_${searchTvMatch?.params.tvId}`
+                            }
+                        >
                             {clickedTv && (
                                 <>
                                     <DetailTvImg $photo={makeImagePath(clickedTv.poster_path)} />

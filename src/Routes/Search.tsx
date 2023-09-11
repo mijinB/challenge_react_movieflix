@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import styled from "styled-components";
 import MovieSlider from "../Components/MovieSlider";
 import TvSlider from "../Components/TvSlider";
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
     padding-bottom: 50px;
@@ -21,9 +22,22 @@ const SliderWrapper = styled.div`
 `;
 
 const Category = styled.h3<{ $top: number }>`
-    position: relative;
+    position: absolute;
     top: ${(props) => props.$top}px;
     font-size: 20px;
+    font-weight: 600;
+`;
+
+const NoData = styled.div<{ $top: number }>`
+    position: relative;
+    top: ${(props) => props.$top}px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    background-color: ${(props) => props.theme.black.veryDark};
+    color: ${(props) => props.theme.black.lighter};
+    font-size: 35px;
     font-weight: 600;
 `;
 
@@ -31,14 +45,22 @@ function Search() {
     const [searchParams] = useSearchParams();
     const keyword = searchParams.get("keyword");
 
-    const { data: searchMovieData, isLoading: searchMovieIsLoading } = useQuery<IGetMoviesResult>(
-        ["searchMovie", "searchMovieKeyword"],
-        () => getSearchMovie(keyword ?? "")
-    );
-    const { data: searchTvData, isLoading: searchTvIsLoading } = useQuery<IGetTvResult>(
-        ["searchTv", "searchTvKeyword"],
-        () => getSearchTv(keyword ?? "")
-    );
+    const {
+        data: searchMovieData,
+        isLoading: searchMovieIsLoading,
+        refetch: searchMovieResearch,
+    } = useQuery<IGetMoviesResult>(["searchMovie", "searchMovieKeyword"], () => getSearchMovie(keyword ?? ""));
+    const {
+        data: searchTvData,
+        isLoading: searchTvIsLoading,
+        refetch: searchTvResearch,
+    } = useQuery<IGetTvResult>(["searchTv", "searchTvKeyword"], () => getSearchTv(keyword ?? ""));
+
+    useEffect(() => {
+        searchMovieResearch();
+        searchTvResearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [keyword]);
 
     return (
         <Wrapper>
@@ -46,10 +68,22 @@ function Search() {
                 <Loader>Loading...</Loader>
             ) : (
                 <SliderWrapper>
-                    <Category $top={150}>MOVIE</Category>
-                    <MovieSlider keyPlus="searchMovie" data={searchMovieData!} top={175} />
-                    <Category $top={480}>TV</Category>
-                    <TvSlider keyPlus="searchTv" data={searchTvData!} top={505} />
+                    <>
+                        <Category $top={150}>MOVIE</Category>
+                        {searchMovieData && searchMovieData?.results.length > 0 ? (
+                            <MovieSlider section="search" keyPlus="searchMovie" data={searchMovieData!} top={200} />
+                        ) : (
+                            <NoData $top={200}>Not Found Data</NoData>
+                        )}
+                    </>
+                    <>
+                        <Category $top={480}>TV</Category>
+                        {searchTvData && searchTvData?.results.length > 0 ? (
+                            <TvSlider section="search" keyPlus="searchTv" data={searchTvData!} top={530} />
+                        ) : (
+                            <NoData $top={330}>Not Found Data</NoData>
+                        )}
+                    </>
                 </SliderWrapper>
             )}
         </Wrapper>

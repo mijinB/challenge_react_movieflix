@@ -64,6 +64,24 @@ const BoxInfo = styled(motion.div)`
     }
 `;
 
+const NoImg = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: ${(props) => props.theme.black.veryDark};
+    color: ${(props) => props.theme.white.darker};
+    text-align: center;
+    font-weight: 600;
+    h2 {
+        font-size: 20px;
+    }
+    h3 {
+        font-size: 14px;
+    }
+`;
+
 const Overlay = styled(motion.div)`
     position: fixed;
     z-index: 1;
@@ -153,12 +171,13 @@ const boxInfoVariants = {
 };
 
 interface IMovieSliderProps {
+    section: string;
     keyPlus: string;
     data: IGetMoviesResult;
     top: number;
 }
 
-function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
+function MovieSlider({ section, keyPlus, data, top }: IMovieSliderProps) {
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
@@ -166,6 +185,7 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
     const [clickedMovie, setClickedMovie] = useState<IMovie>();
     const navigate = useNavigate();
     const detailMovieMatch = useMatch("/movies/:movieId");
+    const searchMovieMatch = useMatch("/search/:movieId");
 
     /**@function increaseIndex
      * 1. data(API)가 있으면 아래 기능들 수행
@@ -194,18 +214,18 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
     };
 
     /**@function onBoxClicked
-     * 1. `/movies/${movieId}`경로로 이동
+     * 1. `/${section}/${movieId}`경로로 이동
      */
     const onBoxClicked = (movie: IMovie) => {
-        navigate(`/movies/${movie.id}`);
+        navigate(`/${section}/${movie.id}`);
         setClickedMovie(movie);
     };
 
     /**@function onOverlayClick
-     * 1. "/"경로로 이동
+     * 1. "/${section}"경로로 이동
      */
     const onOverlayClick = () => {
-        navigate("/");
+        navigate(`/${section}`);
         setClickedMovie(undefined);
     };
 
@@ -233,7 +253,16 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
                                     transition={{ type: "tween" }}
                                     onClick={() => onBoxClicked(movie)}
                                 >
-                                    <BoxImg $photo={makeImagePath(movie.backdrop_path, "w500")} />
+                                    {movie.backdrop_path || movie.poster_path ? (
+                                        <BoxImg
+                                            $photo={makeImagePath(movie.backdrop_path ?? movie.poster_path, "w500")}
+                                        />
+                                    ) : (
+                                        <NoImg>
+                                            <h2>{movie.title}</h2>
+                                            <h3>{movie.original_title}</h3>
+                                        </NoImg>
+                                    )}
                                     <BoxInfo variants={boxInfoVariants}>
                                         <span>{`⭐${movie.vote_average}/10`}</span>
                                         <h2>{movie.title}</h2>
@@ -262,10 +291,16 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
                 NEXT!!
             </button>
             <AnimatePresence>
-                {detailMovieMatch && clickedMovie ? (
+                {(detailMovieMatch || searchMovieMatch) && clickedMovie ? (
                     <>
                         <Overlay animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onOverlayClick} />
-                        <DetailMovieBox layoutId={`${keyPlus}_${detailMovieMatch.params.movieId}`}>
+                        <DetailMovieBox
+                            layoutId={
+                                detailMovieMatch
+                                    ? `${keyPlus}_${detailMovieMatch?.params.movieId}`
+                                    : `${keyPlus}_${searchMovieMatch?.params.movieId}`
+                            }
+                        >
                             {clickedMovie && (
                                 <>
                                     <DetailMovieImg $photo={makeImagePath(clickedMovie.poster_path)} />
