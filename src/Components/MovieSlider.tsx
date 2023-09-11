@@ -105,13 +105,14 @@ const Overlay = styled(motion.div)`
     position: fixed;
     z-index: 1;
     top: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;
 
-const DetailMovieBox = styled(motion.div)`
+const DetailMovieBox = styled(motion.div)<{ $photo: string }>`
     position: fixed;
     z-index: 2;
     top: 100px;
@@ -122,7 +123,7 @@ const DetailMovieBox = styled(motion.div)`
     height: 75vh;
     margin: 0 auto;
     border-radius: 15px;
-    background-color: ${(props) => props.theme.black.darker};
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${(props) => props.$photo}) center/cover;
     overflow: hidden;
 `;
 
@@ -139,16 +140,28 @@ const DetailMovieInfoWrapper = styled.div`
     word-break: keep-all;
     h2 {
         margin-bottom: 5px;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 600;
     }
     h3 {
-        margin-bottom: 35px;
-        font-size: 15px;
+        margin-bottom: 20px;
+        font-size: 17px;
         font-weight: 600;
     }
     p {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+`;
+
+const SmallInfoWrapper = styled.div`
+    p:first-child {
+        font-size: 12px;
+    }
+    p:last-child {
+        margin-bottom: 30px;
         font-size: 14px;
+        font-weight: 600;
     }
 `;
 
@@ -306,6 +319,7 @@ function MovieSlider({ section, keyPlus, data, top, buttonTop }: IMovieSliderPro
                                     ? `${keyPlus}_${detailMovieMatch?.params.movieId}`
                                     : `${keyPlus}_${searchMovieMatch?.params.movieId}`
                             }
+                            $photo={makeImagePath(clickedMovie.backdrop_path)}
                         >
                             {clickedMovie && (
                                 <>
@@ -313,6 +327,10 @@ function MovieSlider({ section, keyPlus, data, top, buttonTop }: IMovieSliderPro
                                     <DetailMovieInfoWrapper>
                                         <h2>{clickedMovie.title}</h2>
                                         <h3>{clickedMovie.original_title}</h3>
+                                        <SmallInfoWrapper>
+                                            <p>{`개봉일 : ${clickedMovie.release_date}`}</p>
+                                            <p>{`⭐${clickedMovie.vote_average}/10 (total ${clickedMovie.vote_count})`}</p>
+                                        </SmallInfoWrapper>
                                         <p>{clickedMovie.overview}</p>
                                     </DetailMovieInfoWrapper>
                                 </>

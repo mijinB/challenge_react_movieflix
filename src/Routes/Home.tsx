@@ -18,19 +18,20 @@ const Loader = styled.div`
 const Banner = styled.div<{ $photo: string }>`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     height: 100vh;
-    padding: 60px;
+    padding: 220px 60px;
     background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(24, 24, 24, 1)), url(${(props) => props.$photo});
     background-size: cover;
     word-break: keep-all;
     h2 {
-        margin-bottom: 20px;
+        width: 40%;
+        margin-bottom: 35px;
         font-size: 40px;
         font-weight: 600;
     }
     p {
-        width: 48%;
+        width: 40%;
         font-size: 18px;
         line-height: 28px;
     }
