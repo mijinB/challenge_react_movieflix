@@ -1,10 +1,10 @@
+import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { IGetMoviesResult, IGetTvResult, getSearchMovie, getSearchTv } from "../api";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import MovieSlider from "../Components/MovieSlider";
 import TvSlider from "../Components/TvSlider";
-import { useEffect } from "react";
 
 const Wrapper = styled.div`
     padding-bottom: 50px;
@@ -48,19 +48,17 @@ function Search() {
     const {
         data: searchMovieData,
         isLoading: searchMovieIsLoading,
-        refetch: searchMovieResearch,
     } = useQuery<IGetMoviesResult>(["searchMovie", "searchMovieKeyword"], () => getSearchMovie(keyword ?? ""));
     const {
         data: searchTvData,
         isLoading: searchTvIsLoading,
-        refetch: searchTvResearch,
     } = useQuery<IGetTvResult>(["searchTv", "searchTvKeyword"], () => getSearchTv(keyword ?? ""));
 
-    useEffect(() => {
-        searchMovieResearch();
-        searchTvResearch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [keyword]);
+    // useEffect(() => {
+    //     searchMovieResearch();
+    //     searchTvResearch();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [keyword]);
 
     return (
         <Wrapper>
@@ -71,7 +69,12 @@ function Search() {
                     <>
                         <Category $top={150}>MOVIE</Category>
                         {searchMovieData && searchMovieData?.results.length > 0 ? (
-                            <MovieSlider section="search" keyPlus="searchMovie" data={searchMovieData!} top={200} />
+                            <MovieSlider
+                                section="search"
+                                keyPlus="searchMovie"
+                                data={searchMovieData && searchMovieData}
+                                top={200}
+                            />
                         ) : (
                             <NoData $top={200}>Not Found Data</NoData>
                         )}
@@ -79,7 +82,12 @@ function Search() {
                     <>
                         <Category $top={480}>TV</Category>
                         {searchTvData && searchTvData?.results.length > 0 ? (
-                            <TvSlider section="search" keyPlus="searchTv" data={searchTvData!} top={530} />
+                            <TvSlider
+                                section="search"
+                                keyPlus="searchTv"
+                                data={searchTvData && searchTvData}
+                                top={530}
+                            />
                         ) : (
                             <NoData $top={330}>Not Found Data</NoData>
                         )}
@@ -90,4 +98,4 @@ function Search() {
     );
 }
 
-export default Search;
+export default React.memo(Search);

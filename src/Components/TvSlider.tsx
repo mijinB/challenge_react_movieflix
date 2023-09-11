@@ -249,7 +249,7 @@ function TvSlider({ section, keyPlus, data, top }: ITvSliderProps) {
                                     layoutId={`${keyPlus}_${tv.id}`}
                                     key={`${keyPlus}_${tv.id}`}
                                     variants={boxVariants}
-                                    initial="nomal"
+                                    initial="normal"
                                     whileHover="hover"
                                     transition={{ type: "tween" }}
                                     onClick={() => onBoxClicked(tv)}

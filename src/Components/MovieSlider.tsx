@@ -248,7 +248,7 @@ function MovieSlider({ section, keyPlus, data, top }: IMovieSliderProps) {
                                     layoutId={`${keyPlus}_${movie.id}`}
                                     key={`${keyPlus}_${movie.id}`}
                                     variants={boxVariants}
-                                    initial="nomal"
+                                    initial="normal"
                                     whileHover="hover"
                                     transition={{ type: "tween" }}
                                     onClick={() => onBoxClicked(movie)}
