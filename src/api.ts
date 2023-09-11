@@ -78,3 +78,15 @@ export function getTopRatedTv() {
 export function getPopularTv() {
     return fetch(`${BASE_PATH}/tv/popular?api_key=${API_KEY}&language=en-US`).then((response) => response.json());
 }
+
+export function getSearchMovie($keyword: string) {
+    return fetch(`${BASE_PATH}/search/movie?api_key=${API_KEY}&query=${$keyword}&language=en-US`).then((response) =>
+        response.json()
+    );
+}
+
+export function getSearchTv($keyword: string) {
+    return fetch(`${BASE_PATH}/search/tv?api_key=${API_KEY}&query=${$keyword}&language=en-US`).then((response) =>
+        response.json()
+    );
+}
