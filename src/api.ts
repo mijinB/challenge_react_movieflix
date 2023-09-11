@@ -24,6 +24,25 @@ export interface IGetMoviesResult {
     total_results: number;
 }
 
+export interface ITv {
+    id: number;
+    backdrop_path: string;
+    poster_path: string;
+    original_name: string;
+    name: string;
+    overview: string;
+    first_air_date: string;
+    vote_average: number;
+    vote_count: number;
+}
+
+export interface IGetTvResult {
+    page: number;
+    results: ITv[];
+    total_pages: number;
+    total_results: number;
+}
+
 export function getNowPlayingMovies() {
     return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&region=kr`).then((response) =>
         response.json()
@@ -46,4 +65,8 @@ export function getPopularMovies() {
     return fetch(`${BASE_PATH}/movie/popular?api_key=${API_KEY}&language=ko-KR&region=kr`).then((response) =>
         response.json()
     );
+}
+
+export function getairingTodayTv() {
+    return fetch(`${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&language=ko-KR`).then((response) => response.json());
 }

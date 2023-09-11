@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath } from "../utils";
-import { IGetMoviesResult, IMovie } from "../api";
+import { IMovie } from "../api";
 
 const Slider = styled.div<{ $top: number }>`
     position: relative;
@@ -152,13 +152,13 @@ const boxInfoVariants = {
     },
 };
 
-interface IMovieSliderProps {
+interface ISliderProps {
     keyPlus: string;
-    data: IGetMoviesResult;
+    data: IMovie[] | undefined;
     top: number;
 }
 
-function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
+function MovieSlider({ keyPlus, data, top }: ISliderProps) {
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
@@ -180,7 +180,7 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
             if (sliderLeaving) return;
             toggleLeaving();
 
-            const totalMovies = data.results.length - 1;
+            const totalMovies = data.length - 1;
             const maxIndex = Math.floor(totalMovies / sliderOffset) - 1;
             setSliderPage((prev) => (prev === maxIndex ? 0 : prev + 1));
         }
@@ -221,27 +221,28 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
                         exit="exit"
                         transition={{ type: "tween", duration: 1 }}
                     >
-                        {data?.results
-                            .slice(1)
-                            .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
-                            .map((movie) => (
-                                <Box
-                                    layoutId={`${keyPlus}_${movie.id}`}
-                                    key={`${keyPlus}_${movie.id}`}
-                                    variants={boxVariants}
-                                    initial="nomal"
-                                    whileHover="hover"
-                                    transition={{ type: "tween" }}
-                                    onClick={() => onBoxClicked(movie)}
-                                >
-                                    <BoxImg $photo={makeImagePath(movie.backdrop_path, "w500")} />
-                                    <BoxInfo variants={boxInfoVariants}>
-                                        <span>{`⭐${movie.vote_average}/10`}</span>
-                                        <h2>{movie.title}</h2>
-                                        <h3>{movie.original_title}</h3>
-                                    </BoxInfo>
-                                </Box>
-                            ))}
+                        {data &&
+                            data
+                                .slice(1)
+                                .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
+                                .map((movie) => (
+                                    <Box
+                                        layoutId={`${keyPlus}_${movie.id}`}
+                                        key={`${keyPlus}_${movie.id}`}
+                                        variants={boxVariants}
+                                        initial="nomal"
+                                        whileHover="hover"
+                                        transition={{ type: "tween" }}
+                                        onClick={() => onBoxClicked(movie)}
+                                    >
+                                        <BoxImg $photo={makeImagePath(movie.backdrop_path, "w500")} />
+                                        <BoxInfo variants={boxInfoVariants}>
+                                            <span>{`⭐${movie.vote_average}/10`}</span>
+                                            <h2>{movie.title}</h2>
+                                            <h3>{movie.original_title}</h3>
+                                        </BoxInfo>
+                                    </Box>
+                                ))}
                     </Row>
                 </AnimatePresence>
             </Slider>
