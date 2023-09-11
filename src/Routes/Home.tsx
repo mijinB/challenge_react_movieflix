@@ -31,7 +31,7 @@ const Banner = styled.div<{ $photo: string }>`
         font-size: 40px;
         font-weight: 600;
     }
-    span {
+    p {
         width: 48%;
         font-size: 18px;
         line-height: 28px;
@@ -101,7 +101,9 @@ const DetailMovieBox = styled(motion.div)`
     width: 42vw;
     height: 75vh;
     margin: 0 auto;
+    border-radius: 15px;
     background-color: ${(props) => props.theme.black.darker};
+    overflow: hidden;
 `;
 
 const DetailMovieImg = styled.div<{ $photo: string }>`
@@ -113,14 +115,20 @@ const DetailMovieImg = styled.div<{ $photo: string }>`
 const DetailMovieInfoWraffer = styled.div`
     width: 40%;
     height: 100%;
+    padding: 25px 15px;
     word-break: keep-all;
     h2 {
+        margin-bottom: 5px;
         font-size: 20px;
         font-weight: 600;
     }
     h3 {
+        margin-bottom: 35px;
         font-size: 15px;
         font-weight: 600;
+    }
+    p {
+        font-size: 14px;
     }
 `;
 
@@ -222,7 +230,7 @@ function Home() {
                 <>
                     <Banner $photo={makeImagePath(data?.results[0].backdrop_path || "")} onClick={increaseIndex}>
                         <h2>{`${data?.results[0].original_title} (${data?.results[0].title})`}</h2>
-                        <span>{data?.results[0].overview}</span>
+                        <p>{data?.results[0].overview}</p>
                     </Banner>
                     <Slider>
                         <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
@@ -268,6 +276,7 @@ function Home() {
                                             <DetailMovieInfoWraffer>
                                                 <h2>{clickedMovie.title}</h2>
                                                 <h3>{clickedMovie.original_title}</h3>
+                                                <p>{clickedMovie.overview}</p>
                                             </DetailMovieInfoWraffer>
                                         </>
                                     )}
