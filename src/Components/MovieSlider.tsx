@@ -79,6 +79,7 @@ const BoxNextButton = styled.button<{ $buttonTop: number }>`
     cursor: pointer;
     &:hover {
         color: ${(props) => props.theme.red};
+        background-color: ${(props) => props.theme.white.lighter};
     }
 `;
 
