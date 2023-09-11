@@ -1,9 +1,10 @@
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath } from "../utils";
-import { IGetMoviesResult } from "../api";
+import { IGetMoviesResult, IMovie } from "../api";
 
 const Slider = styled.div<{ $top: number }>`
     position: relative;
@@ -52,6 +53,7 @@ const BoxInfo = styled(motion.div)`
 
 const Overlay = styled(motion.div)`
     position: fixed;
+    z-index: 1;
     top: 0;
     width: 100%;
     height: 100%;
@@ -61,6 +63,7 @@ const Overlay = styled(motion.div)`
 
 const DetailMovieBox = styled(motion.div)`
     position: fixed;
+    z-index: 2;
     top: 100px;
     left: 0;
     right: 0;
@@ -138,20 +141,19 @@ const boxInfoVariants = {
 };
 
 interface IMovieSliderProps {
+    keyPlus: string;
     data: IGetMoviesResult;
     top: number;
 }
 
-function MovieSlider({ data, top }: IMovieSliderProps) {
+function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
 
+    const [clickedMovie, setClickedMovie] = useState<IMovie>();
     const navigate = useNavigate();
     const detailMovieMatch = useMatch("/movies/:movieId");
-    const clickedMovie =
-        detailMovieMatch?.params.movieId &&
-        data?.results.find((movie) => movie.id === Number(detailMovieMatch?.params.movieId));
 
     /**@function increaseIndex
      * 1. data(API)가 있으면 아래 기능들 수행
@@ -182,8 +184,9 @@ function MovieSlider({ data, top }: IMovieSliderProps) {
     /**@function onBoxClicked
      * 1. `/movies/${movieId}`경로로 이동
      */
-    const onBoxClicked = (movieId: number) => {
-        navigate(`/movies/${movieId}`);
+    const onBoxClicked = (movie: IMovie) => {
+        navigate(`/movies/${movie.id}`);
+        setClickedMovie(movie);
     };
 
     /**@function onOverlayClick
@@ -191,6 +194,7 @@ function MovieSlider({ data, top }: IMovieSliderProps) {
      */
     const onOverlayClick = () => {
         navigate("/");
+        setClickedMovie(undefined);
     };
 
     return (
@@ -198,7 +202,7 @@ function MovieSlider({ data, top }: IMovieSliderProps) {
             <Slider $top={top}>
                 <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
                     <Row
-                        key={sliderPage}
+                        key={`${keyPlus}_${sliderPage}`}
                         variants={rowVariants}
                         initial="hidden"
                         animate="visible"
@@ -210,13 +214,13 @@ function MovieSlider({ data, top }: IMovieSliderProps) {
                             .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
                             .map((movie) => (
                                 <Box
-                                    layoutId={movie.id + ""}
-                                    key={movie.id}
+                                    layoutId={`${keyPlus}_${movie.id}`}
+                                    key={`${keyPlus}_${movie.id}`}
                                     variants={boxVariants}
                                     initial="nomal"
                                     whileHover="hover"
                                     transition={{ type: "tween" }}
-                                    onClick={() => onBoxClicked(movie.id)}
+                                    onClick={() => onBoxClicked(movie)}
                                 >
                                     <BoxImg $photo={makeImagePath(movie.backdrop_path, "w500")} />
                                     <BoxInfo variants={boxInfoVariants}>
@@ -246,10 +250,10 @@ function MovieSlider({ data, top }: IMovieSliderProps) {
                 NEXT!!
             </button>
             <AnimatePresence>
-                {detailMovieMatch ? (
+                {detailMovieMatch && clickedMovie ? (
                     <>
                         <Overlay animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onOverlayClick} />
-                        <DetailMovieBox layoutId={detailMovieMatch.params.movieId}>
+                        <DetailMovieBox layoutId={`${keyPlus}_${detailMovieMatch.params.movieId}`}>
                             {clickedMovie && (
                                 <>
                                     <DetailMovieImg $photo={makeImagePath(clickedMovie.poster_path)} />
@@ -268,4 +272,4 @@ function MovieSlider({ data, top }: IMovieSliderProps) {
     );
 }
 
-export default MovieSlider;
+export default React.memo(MovieSlider);

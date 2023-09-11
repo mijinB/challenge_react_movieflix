@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { IGetMoviesResult, getNowPlayingMovies, getTopRatedMovies } from "../api";
+import { IGetMoviesResult, getNowPlayingMovies, getTopRatedMovies, getUpcomingMovies } from "../api";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import MovieSlider from "../Components/MovieSlider";
@@ -45,10 +45,14 @@ function Home() {
         ["topMovies", "topRated"],
         getTopRatedMovies
     );
+    const { data: upcomingData, isLoading: upcomingIsLoading } = useQuery<IGetMoviesResult>(
+        ["upcomingMovies", "upcoming"],
+        getUpcomingMovies
+    );
 
     return (
         <Wrapper>
-            {nowIsLoading && topIsLoading ? (
+            {nowIsLoading && topIsLoading && upcomingIsLoading ? (
                 <Loader>Loading...</Loader>
             ) : (
                 <>
@@ -56,8 +60,8 @@ function Home() {
                         <h2>{`${nowData?.results[0].original_title} (${nowData?.results[0].title})`}</h2>
                         <p>{nowData?.results[0].overview}</p>
                     </Banner>
-                    <MovieSlider data={nowData!} top={0} />
-                    <MovieSlider data={topData!} top={300} />
+                    <MovieSlider keyPlus="now" data={nowData!} top={0} />
+                    <MovieSlider keyPlus="top" data={topData!} top={300} />
                 </>
             )}
         </Wrapper>
