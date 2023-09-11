@@ -68,8 +68,9 @@ const Overlay = styled(motion.div)`
     position: fixed;
     z-index: 1;
     top: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;
@@ -136,7 +137,7 @@ const boxVariants = {
         transition: {
             type: "tween",
             delay: 0.5,
-            duration: 0.3,
+            duration: 0.5,
         },
     },
 };
@@ -180,7 +181,7 @@ function TvSlider({ keyPlus, data, top }: ITvSliderProps) {
             if (sliderLeaving) return;
             toggleLeaving();
 
-            const totalTvs = data.results.length - 1;
+            const totalTvs = data.results.length;
             const maxIndex = Math.floor(totalTvs / sliderOffset) - 1;
             setSliderPage((prev) => (prev === maxIndex ? 0 : prev + 1));
         }
@@ -222,7 +223,6 @@ function TvSlider({ keyPlus, data, top }: ITvSliderProps) {
                         transition={{ type: "tween", duration: 1 }}
                     >
                         {data?.results
-                            .slice(1)
                             .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
                             .map((tv) => (
                                 <Box

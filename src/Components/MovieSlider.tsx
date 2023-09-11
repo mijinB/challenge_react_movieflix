@@ -180,7 +180,7 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
             if (sliderLeaving) return;
             toggleLeaving();
 
-            const totalMovies = data.results.length - 1;
+            const totalMovies = data.results.length;
             const maxIndex = Math.floor(totalMovies / sliderOffset) - 1;
             setSliderPage((prev) => (prev === maxIndex ? 0 : prev + 1));
         }
@@ -222,7 +222,6 @@ function MovieSlider({ keyPlus, data, top }: IMovieSliderProps) {
                         transition={{ type: "tween", duration: 1 }}
                     >
                         {data?.results
-                            .slice(1)
                             .slice(sliderOffset * sliderPage, sliderOffset * sliderPage + sliderOffset)
                             .map((movie) => (
                                 <Box

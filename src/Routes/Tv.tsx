@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { IGetTvResult, getairingTodayTv } from "../api";
+import { IGetTvResult, getAiringTodayTv, getPopularTv, getTopRatedTv } from "../api";
 import { useQuery } from "react-query";
 import { makeImagePath } from "../utils";
 import TvSlider from "../Components/TvSlider";
 
 const Wrapper = styled.div`
-    padding-bottom: 1300px;
+    padding-bottom: 970px;
 `;
 
 const Loader = styled.div`
@@ -50,12 +50,20 @@ const Category = styled.h3<{ $top: number }>`
 function Tv() {
     const { data: airingData, isLoading: airingIsLoading } = useQuery<IGetTvResult>(
         ["airingTv", "airingToday"],
-        getairingTodayTv
+        getAiringTodayTv
     );
+    const { data: topRatedData, isLoading: topRatedIsLoading } = useQuery<IGetTvResult>(
+        ["topRatedTv", "topRated"],
+        getTopRatedTv
+    );
+    const { data: popularData, isLoading: popularIsLoading } = useQuery<IGetTvResult>(
+      ["popularTv", "popular"],
+      getPopularTv
+  );
 
     return (
         <Wrapper>
-            {airingIsLoading ? (
+            {airingIsLoading && topRatedIsLoading && popularIsLoading ? (
                 <Loader>Loading...</Loader>
             ) : (
                 <>
@@ -64,8 +72,12 @@ function Tv() {
                         <p>{airingData?.results[0].overview}</p>
                     </Banner>
                     <SliderWrapper>
-                        <Category $top={-50}>지금 방영중인 TV</Category>
-                        <TvSlider keyPlus="now" data={airingData!} top={-25} />
+                        <Category $top={-50}>오늘 방송되는 프로그램</Category>
+                        <TvSlider keyPlus="airing" data={airingData!} top={-25} />
+                        <Category $top={280}>7일 동안 방송되는 프로그램</Category>
+                        <TvSlider keyPlus="topRated" data={topRatedData!} top={305} />
+                        <Category $top={610}>인기 많은 프로그램</Category>
+                        <TvSlider keyPlus="popularTv" data={popularData!} top={635} />
                     </SliderWrapper>
                 </>
             )}
