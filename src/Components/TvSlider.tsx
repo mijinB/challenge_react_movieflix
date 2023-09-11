@@ -64,6 +64,24 @@ const BoxInfo = styled(motion.div)`
     }
 `;
 
+const BoxNextButton = styled.button<{ $buttonTop: number }>`
+    position: absolute;
+    top: ${(props) => props.$buttonTop}px;
+    right: 0;
+    z-index: 1;
+    margin: 0 auto;
+    padding: 67px 50px;
+    border: none;
+    background: none;
+    opacity: 0.7;
+    color: ${(props) => props.theme.white.lighter};
+    font-size: 50px;
+    cursor: pointer;
+    &:hover {
+        color: ${(props) => props.theme.red};
+    }
+`;
+
 const NoImg = styled.div`
     display: flex;
     flex-direction: column;
@@ -176,9 +194,10 @@ interface ITvSliderProps {
     keyPlus: string;
     data: IGetTvResult;
     top: number;
+    buttonTop: number;
 }
 
-function TvSlider({ section, keyPlus, data, top }: ITvSliderProps) {
+function TvSlider({ section, keyPlus, data, top, buttonTop }: ITvSliderProps) {
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
@@ -272,23 +291,9 @@ function TvSlider({ section, keyPlus, data, top }: ITvSliderProps) {
                     </Row>
                 </AnimatePresence>
             </Slider>
-            {/* 임시 버튼, 수정 필요 */}
-            <button
-                onClick={increaseIndex}
-                style={{
-                    position: "absolute",
-                    top: 450,
-                    left: 0,
-                    right: 0,
-                    zIndex: 1,
-                    width: "70px",
-                    height: "50px",
-                    margin: "0 auto",
-                    backgroundColor: "red",
-                }}
-            >
-                NEXT!!
-            </button>
+            <BoxNextButton $buttonTop={buttonTop} onClick={increaseIndex}>
+                ▶
+            </BoxNextButton>
             <AnimatePresence>
                 {(detailTvMatch || searchTvMatch) && clickedTv ? (
                     <>

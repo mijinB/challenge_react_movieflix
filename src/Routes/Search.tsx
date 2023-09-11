@@ -74,7 +74,7 @@ function Search() {
                                 keyPlus="searchMovie"
                                 data={searchMovieData && searchMovieData}
                                 top={200}
-                                buttonTop={712}
+                                buttonTop={200}
                             />
                         ) : (
                             <NoData $top={200}>Not Found Data</NoData>
@@ -88,6 +88,7 @@ function Search() {
                                 keyPlus="searchTv"
                                 data={searchTvData && searchTvData}
                                 top={530}
+                                buttonTop={530}
                             />
                         ) : (
                             <NoData $top={330}>Not Found Data</NoData>

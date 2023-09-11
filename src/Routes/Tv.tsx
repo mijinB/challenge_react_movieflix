@@ -57,9 +57,9 @@ function Tv() {
         getTopRatedTv
     );
     const { data: popularData, isLoading: popularIsLoading } = useQuery<IGetTvResult>(
-      ["popularTv", "popular"],
-      getPopularTv
-  );
+        ["popularTv", "popular"],
+        getPopularTv
+    );
 
     return (
         <Wrapper>
@@ -73,11 +73,11 @@ function Tv() {
                     </Banner>
                     <SliderWrapper>
                         <Category $top={-50}>오늘 방송되는 프로그램</Category>
-                        <TvSlider section="tv" keyPlus="airing" data={airingData!} top={-25} />
+                        <TvSlider section="tv" keyPlus="airing" data={airingData!} top={-25} buttonTop={712} />
                         <Category $top={280}>7일 동안 방송되는 프로그램</Category>
-                        <TvSlider section="tv" keyPlus="topRated" data={topRatedData!} top={305} />
+                        <TvSlider section="tv" keyPlus="topRated" data={topRatedData!} top={305} buttonTop={1066} />
                         <Category $top={610}>인기 많은 프로그램</Category>
-                        <TvSlider section="tv" keyPlus="popularTv" data={popularData!} top={635} />
+                        <TvSlider section="tv" keyPlus="popularTv" data={popularData!} top={635} buttonTop={1420} />
                     </SliderWrapper>
                 </>
             )}
