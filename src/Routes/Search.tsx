@@ -45,14 +45,14 @@ function Search() {
     const [searchParams] = useSearchParams();
     const keyword = searchParams.get("keyword");
 
-    const {
-        data: searchMovieData,
-        isLoading: searchMovieIsLoading,
-    } = useQuery<IGetMoviesResult>(["searchMovie", "searchMovieKeyword"], () => getSearchMovie(keyword ?? ""));
-    const {
-        data: searchTvData,
-        isLoading: searchTvIsLoading,
-    } = useQuery<IGetTvResult>(["searchTv", "searchTvKeyword"], () => getSearchTv(keyword ?? ""));
+    const { data: searchMovieData, isLoading: searchMovieIsLoading } = useQuery<IGetMoviesResult>(
+        ["searchMovie", "searchMovieKeyword"],
+        () => getSearchMovie(keyword ?? "")
+    );
+    const { data: searchTvData, isLoading: searchTvIsLoading } = useQuery<IGetTvResult>(
+        ["searchTv", "searchTvKeyword"],
+        () => getSearchTv(keyword ?? "")
+    );
 
     // useEffect(() => {
     //     searchMovieResearch();
@@ -74,6 +74,7 @@ function Search() {
                                 keyPlus="searchMovie"
                                 data={searchMovieData && searchMovieData}
                                 top={200}
+                                buttonTop={712}
                             />
                         ) : (
                             <NoData $top={200}>Not Found Data</NoData>

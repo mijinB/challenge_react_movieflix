@@ -77,13 +77,19 @@ function Home() {
                     </Banner>
                     <SliderWrapper>
                         <Category $top={-50}>지금 상영중인 영화</Category>
-                        <MovieSlider section="movies" keyPlus="now" data={nowData!} top={-25} />
+                        <MovieSlider section="movies" keyPlus="now" data={nowData!} top={-25} buttonTop={712} />
                         <Category $top={280}>TOP 평점 영화</Category>
-                        <MovieSlider section="movies" keyPlus="top" data={topData!} top={305} />
+                        <MovieSlider section="movies" keyPlus="top" data={topData!} top={305} buttonTop={1067} />
                         <Category $top={610}>지금 인기 많은 영화</Category>
-                        <MovieSlider section="movies" keyPlus="popular" data={popularData!} top={635} />
+                        <MovieSlider section="movies" keyPlus="popular" data={popularData!} top={635} buttonTop={1420} />
                         <Category $top={940}>개봉 예정 영화</Category>
-                        <MovieSlider section="movies" keyPlus="upcoming" data={upcomingData!} top={965} />
+                        <MovieSlider
+                            section="movies"
+                            keyPlus="upcoming"
+                            data={upcomingData!}
+                            top={965}
+                            buttonTop={1774}
+                        />
                     </SliderWrapper>
                 </>
             )}
