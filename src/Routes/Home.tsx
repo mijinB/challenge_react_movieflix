@@ -65,59 +65,6 @@ function Home() {
         getPopularMovies
     );
 
-    const nowMovies = nowData?.results.map((movie) => {
-        return {
-            id: movie.id,
-            backdrop_path: movie.backdrop_path,
-            poster_path: movie.poster_path,
-            original_title: movie.original_title,
-            title: movie.title,
-            overview: movie.overview,
-            release_date: movie.release_date,
-            vote_average: movie.vote_average,
-            vote_count: movie.vote_count,
-        };
-    });
-    const topMovies = topData?.results.map((movie) => {
-        return {
-            id: movie.id,
-            backdrop_path: movie.backdrop_path,
-            poster_path: movie.poster_path,
-            original_title: movie.original_title,
-            title: movie.title,
-            overview: movie.overview,
-            release_date: movie.release_date,
-            vote_average: movie.vote_average,
-            vote_count: movie.vote_count,
-        };
-    });
-    const upcomingMovies = upcomingData?.results.map((movie) => {
-        return {
-            id: movie.id,
-            backdrop_path: movie.backdrop_path,
-            poster_path: movie.poster_path,
-            original_title: movie.original_title,
-            title: movie.title,
-            overview: movie.overview,
-            release_date: movie.release_date,
-            vote_average: movie.vote_average,
-            vote_count: movie.vote_count,
-        };
-    });
-    const popularMovies = popularData?.results.map((movie) => {
-        return {
-            id: movie.id,
-            backdrop_path: movie.backdrop_path,
-            poster_path: movie.poster_path,
-            original_title: movie.original_title,
-            title: movie.title,
-            overview: movie.overview,
-            release_date: movie.release_date,
-            vote_average: movie.vote_average,
-            vote_count: movie.vote_count,
-        };
-    });
-
     return (
         <Wrapper>
             {nowIsLoading && topIsLoading && upcomingIsLoading && popularIsLoading ? (
@@ -130,13 +77,13 @@ function Home() {
                     </Banner>
                     <SliderWrapper>
                         <Category $top={-50}>지금 상영중인 영화</Category>
-                        <MovieSlider keyPlus="now" data={nowMovies} top={-25} />
+                        <MovieSlider keyPlus="now" data={nowData!} top={-25} />
                         <Category $top={280}>TOP 평점 영화</Category>
-                        <MovieSlider keyPlus="top" data={topMovies} top={305} />
+                        <MovieSlider keyPlus="top" data={topData!} top={305} />
                         <Category $top={610}>지금 인기 많은 영화</Category>
-                        <MovieSlider keyPlus="popular" data={upcomingMovies} top={635} />
+                        <MovieSlider keyPlus="popular" data={popularData!} top={635} />
                         <Category $top={940}>개봉 예정 영화</Category>
-                        <MovieSlider keyPlus="upcoming" data={popularMovies} top={965} />
+                        <MovieSlider keyPlus="upcoming" data={upcomingData!} top={965} />
                     </SliderWrapper>
                 </>
             )}
