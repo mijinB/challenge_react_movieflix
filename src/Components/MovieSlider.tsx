@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath } from "../utils";
 import { IGetMoviesResult, IMovie } from "../api";
+import useWindowDimensions from "../useWidowDimensions";
 
 const Slider = styled.div<{ $top: number }>`
     position: relative;
@@ -164,18 +165,6 @@ const SmallInfoWrapper = styled.div`
     }
 `;
 
-const rowVariants = {
-    hidden: {
-        x: window.outerWidth + 5,
-    },
-    visible: {
-        x: 0,
-    },
-    exit: {
-        x: -window.outerWidth - 5,
-    },
-};
-
 const boxVariants = {
     normal: {
         scale: 1,
@@ -210,6 +199,8 @@ interface IMovieSliderProps {
 }
 
 function MovieSlider({ section, keyPlus, data, top, buttonTop }: IMovieSliderProps) {
+    const width = useWindowDimensions();
+
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
@@ -267,10 +258,9 @@ function MovieSlider({ section, keyPlus, data, top, buttonTop }: IMovieSliderPro
                 <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
                     <Row
                         key={`${keyPlus}_${sliderPage}`}
-                        variants={rowVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
+                        initial={{ x: width + 10 }}
+                        animate={{ x: 0 }}
+                        exit={{ x: -width - 10 }}
                         transition={{ type: "tween", duration: 1 }}
                     >
                         {data?.results
