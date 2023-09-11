@@ -60,7 +60,7 @@ body {
   background-color: ${(props) => props.theme.black.darker};
   font-weight: 300;
   font-family: 'Source Sans Pro', sans-serif;
-  color: white;
+  color: ${props => props.theme.white.lighter};
   line-height: 1.2;
 }
 a {

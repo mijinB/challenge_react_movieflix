@@ -25,19 +25,17 @@ const Banner = styled.div<{ $photo: string }>`
     padding: 60px;
     background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)), url(${(props) => props.$photo});
     background-size: cover;
-`;
-
-const Title = styled.h2`
-    margin-bottom: 20px;
-    font-size: 40px;
-    font-weight: 600;
-`;
-
-const Overview = styled.p`
-    width: 48%;
-    font-size: 18px;
-    line-height: 28px;
     word-break: keep-all;
+    h2 {
+        margin-bottom: 20px;
+        font-size: 40px;
+        font-weight: 600;
+    }
+    span {
+        width: 48%;
+        font-size: 18px;
+        line-height: 28px;
+    }
 `;
 
 const Slider = styled.div`
@@ -94,14 +92,36 @@ const Overlay = styled(motion.div)`
     opacity: 0;
 `;
 
-const DetailInfoBox = styled(motion.div)`
+const DetailMovieBox = styled(motion.div)`
     position: fixed;
     top: 100px;
     left: 0;
     right: 0;
-    width: 40vw;
-    height: 80vh;
+    display: flex;
+    width: 42vw;
+    height: 75vh;
     margin: 0 auto;
+    background-color: ${(props) => props.theme.black.darker};
+`;
+
+const DetailMovieImg = styled.div<{ $photo: string }>`
+    width: 60%;
+    height: 100%;
+    background: url(${(props) => props.$photo}) center/cover;
+`;
+
+const DetailMovieInfoWraffer = styled.div`
+    width: 40%;
+    height: 100%;
+    word-break: keep-all;
+    h2 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+    h3 {
+        font-size: 15px;
+        font-weight: 600;
+    }
 `;
 
 const rowVariants = {
@@ -149,8 +169,10 @@ function Home() {
     const sliderOffset = 6;
 
     const navigate = useNavigate();
-    const detailInfoBox = useMatch("/movies/:movieId");
-    console.log(detailInfoBox);
+    const detailMovieMatch = useMatch("/movies/:movieId");
+    const clickedMovie =
+        detailMovieMatch?.params.movieId &&
+        data?.results.find((movie) => movie.id === Number(detailMovieMatch?.params.movieId));
 
     /**@function increaseIndex
      * 1. data(API)가 있으면 아래 기능들 수행
@@ -199,8 +221,8 @@ function Home() {
             ) : (
                 <>
                     <Banner $photo={makeImagePath(data?.results[0].backdrop_path || "")} onClick={increaseIndex}>
-                        <Title>{`${data?.results[0].original_title} (${data?.results[0].title})`}</Title>
-                        <Overview>{data?.results[0].overview}</Overview>
+                        <h2>{`${data?.results[0].original_title} (${data?.results[0].title})`}</h2>
+                        <span>{data?.results[0].overview}</span>
                     </Banner>
                     <Slider>
                         <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
@@ -236,10 +258,20 @@ function Home() {
                         </AnimatePresence>
                     </Slider>
                     <AnimatePresence>
-                        {detailInfoBox ? (
+                        {detailMovieMatch ? (
                             <>
                                 <Overlay animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onOverlayClick} />
-                                <DetailInfoBox layoutId={detailInfoBox.params.movieId} />
+                                <DetailMovieBox layoutId={detailMovieMatch.params.movieId}>
+                                    {clickedMovie && (
+                                        <>
+                                            <DetailMovieImg $photo={makeImagePath(clickedMovie.poster_path)} />
+                                            <DetailMovieInfoWraffer>
+                                                <h2>{clickedMovie.title}</h2>
+                                                <h3>{clickedMovie.original_title}</h3>
+                                            </DetailMovieInfoWraffer>
+                                        </>
+                                    )}
+                                </DetailMovieBox>
                             </>
                         ) : null}
                     </AnimatePresence>
