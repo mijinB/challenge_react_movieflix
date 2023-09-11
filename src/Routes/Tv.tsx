@@ -19,7 +19,7 @@ const Banner = styled.div<{ $photo: string }>`
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 100vh;
+    height: 90vh;
     padding: 220px 60px;
     background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(24, 24, 24, 1)), url(${(props) => props.$photo});
     background-size: cover;
@@ -73,11 +73,11 @@ function Tv() {
                     </Banner>
                     <SliderWrapper>
                         <Category $top={-50}>오늘 방송되는 프로그램</Category>
-                        <TvSlider section="tv" keyPlus="airing" data={airingData!} top={-25} buttonTop={954} />
+                        <TvSlider section="tv" keyPlus="airing" data={airingData!} top={-25} buttonTop={859} />
                         <Category $top={280}>일주일동안 방송되는 프로그램</Category>
-                        <TvSlider section="tv" keyPlus="topRated" data={topRatedData!} top={305} buttonTop={1308} />
+                        <TvSlider section="tv" keyPlus="topRated" data={topRatedData!} top={305} buttonTop={1213} />
                         <Category $top={610}>인기 많은 프로그램</Category>
-                        <TvSlider section="tv" keyPlus="popularTv" data={popularData!} top={635} buttonTop={1662} />
+                        <TvSlider section="tv" keyPlus="popularTv" data={popularData!} top={635} buttonTop={1567} />
                     </SliderWrapper>
                 </>
             )}

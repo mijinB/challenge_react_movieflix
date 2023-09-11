@@ -19,7 +19,7 @@ const Banner = styled.div<{ $photo: string }>`
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 100vh;
+    height: 90vh;
     padding: 220px 60px;
     background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(24, 24, 24, 1)), url(${(props) => props.$photo});
     background-size: cover;
@@ -78,18 +78,18 @@ function Home() {
                     </Banner>
                     <SliderWrapper>
                         <Category $top={-50}>지금 상영중인 영화</Category>
-                        <MovieSlider section="movies" keyPlus="now" data={nowData!} top={-25} buttonTop={954} />
+                        <MovieSlider section="movies" keyPlus="now" data={nowData!} top={-25} buttonTop={859} />
                         <Category $top={280}>TOP 평점 영화</Category>
-                        <MovieSlider section="movies" keyPlus="top" data={topData!} top={305} buttonTop={1308} />
+                        <MovieSlider section="movies" keyPlus="top" data={topData!} top={305} buttonTop={1213} />
                         <Category $top={610}>지금 인기 많은 영화</Category>
-                        <MovieSlider section="movies" keyPlus="popular" data={popularData!} top={635} buttonTop={1662} />
+                        <MovieSlider section="movies" keyPlus="popular" data={popularData!} top={635} buttonTop={1567} />
                         <Category $top={940}>개봉 예정 영화</Category>
                         <MovieSlider
                             section="movies"
                             keyPlus="upcoming"
                             data={upcomingData!}
                             top={965}
-                            buttonTop={2016}
+                            buttonTop={1921}
                         />
                     </SliderWrapper>
                 </>
