@@ -1,7 +1,8 @@
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { motion, useAnimation, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
     position: fixed;
@@ -50,7 +51,7 @@ const Item = styled.li`
     }
 `;
 
-const Search = styled.span`
+const Search = styled.form`
     position: relative;
     display: flex;
     align-items: center;
@@ -114,6 +115,10 @@ const navVariants = {
     scroll: { backgroundColor: "rgba(0, 0, 0, 1)" },
 };
 
+interface IForm {
+    keyword: string;
+}
+
 function Header() {
     const homeMatch = useMatch("/");
     const tvMatch = useMatch("tv");
@@ -121,6 +126,12 @@ function Header() {
     const inputAnimation = useAnimation();
     const navAnimation = useAnimation();
     const { scrollY } = useScroll();
+
+    const { register, handleSubmit } = useForm<IForm>();
+    const navigate = useNavigate();
+    const onValid = (data: IForm) => {
+        navigate(`/search?keyword=${data.keyword}`);
+    };
 
     /**@function toggleSearch
      * 1. searchOpen의 값이 true이면 input창이 이미 열린 상태니까 scaleX:0으로 숨겨주고
@@ -186,7 +197,7 @@ function Header() {
                 </Items>
             </Col>
             <Col>
-                <Search>
+                <Search onSubmit={handleSubmit(onValid)}>
                     <motion.svg
                         onClick={toggleSearch}
                         animate={{ x: searchOpen ? -177 : 0 }}
@@ -202,6 +213,7 @@ function Header() {
                         ></path>
                     </motion.svg>
                     <Input
+                        {...register("keyword", { required: true, minLength: 2 })}
                         animate={inputAnimation}
                         initial={{ scaleX: 0 }}
                         transition={{ type: "linear" }}

@@ -112,7 +112,7 @@ const DetailMovieImg = styled.div<{ $photo: string }>`
     background: url(${(props) => props.$photo}) center/cover;
 `;
 
-const DetailMovieInfoWraffer = styled.div`
+const DetailMovieInfoWrapper = styled.div`
     width: 40%;
     height: 100%;
     padding: 25px 15px;
@@ -273,11 +273,11 @@ function Home() {
                                     {clickedMovie && (
                                         <>
                                             <DetailMovieImg $photo={makeImagePath(clickedMovie.poster_path)} />
-                                            <DetailMovieInfoWraffer>
+                                            <DetailMovieInfoWrapper>
                                                 <h2>{clickedMovie.title}</h2>
                                                 <h3>{clickedMovie.original_title}</h3>
                                                 <p>{clickedMovie.overview}</p>
-                                            </DetailMovieInfoWraffer>
+                                            </DetailMovieInfoWrapper>
                                         </>
                                     )}
                                 </DetailMovieBox>
