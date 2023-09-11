@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/challenge_react_movieflix/static/js/main.d8af6724.js",
+    "main.js": "/challenge_react_movieflix/static/js/main.f7097dd4.js",
     "index.html": "/challenge_react_movieflix/index.html",
-    "main.d8af6724.js.map": "/challenge_react_movieflix/static/js/main.d8af6724.js.map"
+    "main.f7097dd4.js.map": "/challenge_react_movieflix/static/js/main.f7097dd4.js.map"
   },
   "entrypoints": [
-    "static/js/main.d8af6724.js"
+    "static/js/main.f7097dd4.js"
   ]
 }
