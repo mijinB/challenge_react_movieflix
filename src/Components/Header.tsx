@@ -46,6 +46,7 @@ const Item = styled.li`
     justify-content: center;
     margin-right: 20px;
     color: ${(props) => props.theme.white.darker};
+    font-weight: 600;
     transition: color 0.3s ease-in-out;
     &:hover {
         color: ${(props) => props.theme.white.lighter};
