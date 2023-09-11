@@ -85,15 +85,23 @@ const BoxInfo = styled(motion.div)`
     }
 `;
 
+const Overlay = styled(motion.div)`
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+`;
+
 const DetailInfoBox = styled(motion.div)`
-    position: absolute;
-    bottom: -210px;
+    position: fixed;
+    top: 100px;
     left: 0;
     right: 0;
+    width: 40vw;
+    height: 80vh;
     margin: 0 auto;
-    width: 550px;
-    height: 400px;
-    background-color: black;
 `;
 
 const rowVariants = {
@@ -170,8 +178,18 @@ function Home() {
         setSliderLeaving((prev) => !prev);
     };
 
+    /**@function onBoxClicked
+     * 1. `/movies/${movieId}`경로로 이동
+     */
     const onBoxClicked = (movieId: number) => {
         navigate(`/movies/${movieId}`);
+    };
+
+    /**@function onOverlayClick
+     * 1. "/"경로로 이동
+     */
+    const onOverlayClick = () => {
+        navigate("/");
     };
 
     return (
@@ -218,7 +236,12 @@ function Home() {
                         </AnimatePresence>
                     </Slider>
                     <AnimatePresence>
-                        {detailInfoBox ? <DetailInfoBox layoutId={detailInfoBox.params.movieId} /> : null}
+                        {detailInfoBox ? (
+                            <>
+                                <Overlay animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onOverlayClick} />
+                                <DetailInfoBox layoutId={detailInfoBox.params.movieId} />
+                            </>
+                        ) : null}
                     </AnimatePresence>
                 </>
             )}
