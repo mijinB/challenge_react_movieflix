@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { IGetMoviesResult, IGetTvResult, getSearchMovie, getSearchTv } from "../api";
 import { useQuery } from "react-query";
@@ -45,20 +45,20 @@ function Search() {
     const [searchParams] = useSearchParams();
     const keyword = searchParams.get("keyword");
 
-    const { data: searchMovieData, isLoading: searchMovieIsLoading } = useQuery<IGetMoviesResult>(
+    const { data: searchMovieData, isLoading: searchMovieIsLoading, refetch: searchMovieResearch } = useQuery<IGetMoviesResult>(
         ["searchMovie", "searchMovieKeyword"],
         () => getSearchMovie(keyword ?? "")
     );
-    const { data: searchTvData, isLoading: searchTvIsLoading } = useQuery<IGetTvResult>(
+    const { data: searchTvData, isLoading: searchTvIsLoading, refetch: searchTvResearch } = useQuery<IGetTvResult>(
         ["searchTv", "searchTvKeyword"],
         () => getSearchTv(keyword ?? "")
     );
 
-    // useEffect(() => {
-    //     searchMovieResearch();
-    //     searchTvResearch();
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [keyword]);
+    useEffect(() => {
+        searchMovieResearch();
+        searchTvResearch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [keyword]);
 
     return (
         <Wrapper>

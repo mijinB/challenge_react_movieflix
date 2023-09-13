@@ -2,7 +2,7 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { useState } from "react";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useMatch, useNavigate, useSearchParams } from "react-router-dom";
 import { makeImagePath } from "../utils";
 import { IGetMoviesResult, IMovie } from "../api";
 import useWindowDimensions from "../useWidowDimensions";
@@ -200,6 +200,8 @@ interface IMovieSliderProps {
 
 function MovieSlider({ section, keyPlus, data, top, buttonTop }: IMovieSliderProps) {
     const width = useWindowDimensions();
+    const [searchParams] = useSearchParams();
+    const keyword = searchParams.get("keyword");
 
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
@@ -237,18 +239,19 @@ function MovieSlider({ section, keyPlus, data, top, buttonTop }: IMovieSliderPro
     };
 
     /**@function onBoxClicked
-     * 1. `/${section}/${movieId}`경로로 이동
+     * 1. `/${section}/${movieId}`경로로 이동 (Search화면이면 "?keyword={keyword}추가")
+     * 2. clickedMovie state 변수를 클릭한 movie로 저장
      */
     const onBoxClicked = (movie: IMovie) => {
-        navigate(`/${section}/${movie.id}`);
+        navigate(`/${section}/${movie.id}${keyword ? "?keyword=" + keyword : ""}`);
         setClickedMovie(movie);
     };
 
     /**@function onOverlayClick
-     * 1. "/${section}"경로로 이동
+     * 1. "/${section}"경로로 이동 (Search화면이면 "?keyword={keyword}추가")
      */
     const onOverlayClick = () => {
-        navigate(`/${section}`);
+        navigate(`/${section}${keyword ? "?keyword=" + keyword : ""}`);
         setClickedMovie(undefined);
     };
 

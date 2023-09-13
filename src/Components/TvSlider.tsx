@@ -2,7 +2,7 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { useState } from "react";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useMatch, useNavigate, useSearchParams } from "react-router-dom";
 import { makeImagePath } from "../utils";
 import { IGetTvResult, ITv } from "../api";
 
@@ -210,6 +210,9 @@ interface ITvSliderProps {
 }
 
 function TvSlider({ section, keyPlus, data, top, buttonTop }: ITvSliderProps) {
+    const [searchParams] = useSearchParams();
+    const keyword = searchParams.get("keyword");
+
     const [sliderPage, setSliderPage] = useState(0);
     const [sliderLeaving, setSliderLeaving] = useState(false);
     const sliderOffset = 6;
@@ -246,18 +249,19 @@ function TvSlider({ section, keyPlus, data, top, buttonTop }: ITvSliderProps) {
     };
 
     /**@function onBoxClicked
-     * 1. `/${section}/${tvId}`경로로 이동
+     * 1. `/${section}/${tvId}`경로로 이동 (Search화면이면 "?keyword={keyword}추가")
+     * 2. clickedTv state 변수를 클릭한 tv로 저장
      */
     const onBoxClicked = (tv: ITv) => {
-        navigate(`/${section}/${tv.id}`);
+        navigate(`/${section}/${tv.id}${keyword ? "?keyword=" + keyword : ""}`);
         setClickedTv(tv);
     };
 
     /**@function onOverlayClick
-     * 1. "/${section}"경로로 이동
+     * 1. "/${section}"경로로 이동 (Search화면이면 "?keyword={keyword}추가")
      */
     const onOverlayClick = () => {
-        navigate(`/${section}`);
+        navigate(`/${section}${keyword ? "?keyword=" + keyword : ""}`);
         setClickedTv(undefined);
     };
 
